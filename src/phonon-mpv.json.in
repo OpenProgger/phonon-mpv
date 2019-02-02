@@ -1,0 +1,9 @@
+{
+    "Name": "Phonon MPV",
+    "Icon": "mpv",
+    "Version": "@PHONON_MPV_VERSION@",
+    "Website": "http://www.mpv.io",
+
+    "InterfaceVersion": 0,
+    "InitialPreference": 20
+}
