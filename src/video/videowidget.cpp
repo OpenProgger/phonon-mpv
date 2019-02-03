@@ -25,6 +25,13 @@
 #include <QtGui/QPaintEvent>
 #include <QDir>
 #include <QOpenGLContext>
+#ifdef X11_SUPPORT
+#include <QtX11Extras/QX11Info>
+#endif
+#ifdef WAYLAND_SUPPORT
+#include <QGuiApplication>
+#include <qpa/qplatformnativeinterface.h>
+#endif
 
 #define MPV_ENABLE_DEPRECATED 0
 #include <mpv/render_gl.h>
@@ -48,10 +55,23 @@ static void* get_proc_address(void* ctx, const char* name) {
 
 void VideoWidget::initializeGL() {
     mpv_opengl_init_params gl_init_params{get_proc_address, nullptr, nullptr};
-    //FIXME hwdec
+    mpv_render_param display{MPV_RENDER_PARAM_INVALID, nullptr};
+#ifdef X11_SUPPORT
+    if(QX11Info::isPlatformX11()) {
+        display.type = MPV_RENDER_PARAM_X11_DISPLAY;
+        display.data = QX11Info::display();
+    }
+#endif
+#ifdef WAYLAND_SUPPORT
+    if(!display.data) {
+        display.type = MPV_RENDER_PARAM_WL_DISPLAY;
+        display.data = (struct wl_display*)QGuiApplication::platformNativeInterface()->nativeResourceForWindow("display", NULL);
+    }
+#endif
     mpv_render_param params[]{
         {MPV_RENDER_PARAM_API_TYPE, const_cast<char *>(MPV_RENDER_API_TYPE_OPENGL)},
         {MPV_RENDER_PARAM_OPENGL_INIT_PARAMS, &gl_init_params},
+        display,
         {MPV_RENDER_PARAM_INVALID, nullptr}
     };
     

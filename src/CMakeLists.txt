@@ -50,6 +50,17 @@ target_link_libraries(phonon_mpv
     ${MPV_LIBRARIES}
 )
 
+if(Qt5Gui_FOUND)
+    add_definitions(-DWAYLAND_SUPPORT)
+    include_directories(${Qt5Gui_PRIVATE_INCLUDE_DIRS})
+    target_link_libraries(phonon_mpv Qt5Gui)
+endif()
+
+if(Qt5X11Extras_FOUND)
+    add_definitions(-DX11_SUPPORT)
+    target_link_libraries(phonon_mpv Qt5X11Extras)
+endif()
+
 install(TARGETS phonon_mpv DESTINATION ${BACKEND_INSTALL_DIR})
 
 if(PHONON_BUILD_PHONON4QT5)

@@ -14,6 +14,9 @@ find_package(PkgConfig)
 pkg_check_modules(MPV REQUIRED mpv>=0.29.0)
 macro_log_feature(MPV_FOUND "LibMPV" "MPV C API Library" "http://github.com/mpv-player/mpv" TRUE "0.29.0")
 
+find_package(Qt5X11Extras)
+find_package(QtGui)
+
 if(PHONON_FOUND_EXPERIMENTAL)
   add_definitions(-DPHONON_EXPERIMENTAL)
 else(PHONON_FOUND_EXPERIMENTAL)
