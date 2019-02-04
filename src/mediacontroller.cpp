@@ -264,11 +264,19 @@ void MediaController::refreshAudioChannels() {
         error() << "Failed to get Audio Channels:" << mpv_error_string(err);
     for(auto i{0}; i < audioChannels.u.list->num; i++) {
         if(QString(audioChannels.u.list->values[i].u.list->values[1].u.string) == "audio") {
-            GlobalAudioChannels::instance()->add(this, i, QString::number(audioChannels.u.list->values[i].u.list->values[0].u.int64), "");
+            auto id{0};
+            QString title;
+            for(auto j{0}; j < audioChannels.u.list->values[i].u.list->num; j++) {
+                if(QString(audioChannels.u.list->values[i].u.list->keys[j]) == "id")
+                    id = audioChannels.u.list->values[i].u.list->values[j].u.int64;
+                if(QString(audioChannels.u.list->values[i].u.list->keys[j]) == "lang")
+                    title = audioChannels.u.list->values[i].u.list->values[j].u.string;
+            }
+            GlobalAudioChannels::instance()->add(this, id, title.isEmpty() ? "Title " + QString::number(id) : title, "");
             if(i == currentChannelId) {
                 const QList<AudioChannelDescription> list{GlobalAudioChannels::instance()->listFor(this)};
                 foreach(const AudioChannelDescription &descriptor, list) {
-                    if(descriptor.name() == QString::number(audioChannels.u.list->values[i].u.list->values[0].u.int64))
+                    if(descriptor.name() == id)
                         m_currentAudioChannel = descriptor;
                 }
             }
@@ -302,7 +310,7 @@ void MediaController::setCurrentSubtitle(const Phonon::SubtitleDescription &subt
     } else {
         int64_t localIndex{GlobalSubtitles::instance()->localIdFor(this, subtitle.index())};
         debug() << "localid" << localIndex;
-        if((err = mpv_set_property(m_player, "sub", MPV_FORMAT_INT64, &localIndex)))
+        if((err = mpv_set_property(m_player, "sid", MPV_FORMAT_INT64, &localIndex)))
             error() << "Failed to set Subtitle:" << mpv_error_string(err);
         else
             m_currentSubtitle = subtitle;
@@ -349,12 +357,24 @@ void MediaController::refreshSubtitles() {
         error() << "Failed to get Subtitles:" << mpv_error_string(err);
     for(auto i{0}; i < subtitles.u.list->num; i++) {
         if(QString(subtitles.u.list->values[i].u.list->values[1].u.string) == "sub") {
-            debug() << "found subtitle" << subtitles.u.list->values[i].u.list->values[3].u.string << "[" << subtitles.u.list->values[i].u.list->values[0].u.int64 << "]";
-            GlobalSubtitles::instance()->add(this, subtitles.u.list->values[i].u.list->values[0].u.int64, subtitles.u.list->values[i].u.list->values[3].u.string, "");
-            if(subtitles.u.list->values[i].u.list->values[0].u.int64 == currentSubtitleId) {
+            auto id{0};
+            QString title;
+            bool force{false};
+            for(auto j{0}; j < subtitles.u.list->values[i].u.list->num; j++) {
+                if(QString(subtitles.u.list->values[i].u.list->keys[j]) == "id")
+                    id = subtitles.u.list->values[i].u.list->values[j].u.int64;
+                if(QString(subtitles.u.list->values[i].u.list->keys[j]) == "lang")
+                    title = subtitles.u.list->values[i].u.list->values[j].u.string;
+                if(QString(subtitles.u.list->values[i].u.list->keys[j]) == "forced" && subtitles.u.list->values[i].u.list->values[j].u.flag)
+                    force = true;
+                warning() << "Data:" << subtitles.u.list->values[i].u.list->keys[j];
+            }
+            debug() << "found subtitle" << title << "[" << id << "]";
+            GlobalSubtitles::instance()->add(this, id, (title.isEmpty() ? "Subtitle " + QString::number(id) : title) + (force ? "[FORCED]" : ""), "");
+            if(id == currentSubtitleId) {
                 const QList<SubtitleDescription> list{GlobalSubtitles::instance()->listFor(this)};
                 foreach(const SubtitleDescription &descriptor, list) {
-                    if(descriptor.name() == subtitles.u.list->values[i].u.list->values[3].u.string)
+                    if(descriptor.name() == title)
                         m_currentSubtitle = descriptor;
                 }
             }
