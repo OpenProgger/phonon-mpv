@@ -51,6 +51,8 @@ MediaObject::MediaObject(QObject* parent)
         return;
     }
 
+    if(qgetenv("PHONON_BACKEND_DEBUG").toInt() >= 3) // 3 is maximum
+        mpv_request_log_messages(m_player, "v");
     mpv_observe_property(m_player, 0, "time-pos", MPV_FORMAT_DOUBLE);
     mpv_observe_property(m_player, 1, "seekable", MPV_FORMAT_FLAG);
     mpv_observe_property(m_player, 2, "duration", MPV_FORMAT_DOUBLE);
@@ -438,18 +440,15 @@ void MediaObject::updateMetaData() {
     mpv_node metaData;
     if((err = mpv_get_property(m_player, "metadata", MPV_FORMAT_NODE, &metaData)))
         warning() << "Failed to get title count:" << mpv_error_string(err);
-    else
-        warning() << "Metadata Count:" << metaData.u.list->num;
-    
+
     char* title;
     if(!(title = mpv_get_property_string(m_player, "media-title")))
         warning() << "Failed to get title name";
     else {
-        warning() << "Title:" << title;
         metaDataMap.insert(QLatin1String("TITLE"), title);
         mpv_free(title);
     }
-    
+
     for(auto i{0}; i < metaData.u.list->num; i++)
         metaDataMap.insert(QLatin1String(metaData.u.list->keys[i]), metaData.u.list->values[i].u.string);
     //FIXME
@@ -544,6 +543,30 @@ void MediaObject::mpv_event_loop() {
         mpv_event *event = mpv_wait_event(m_player, 0);
         //debug() << "Event " << event->event_id;
         switch (event->event_id) {
+            case MPV_EVENT_LOG_MESSAGE: {
+                QString msg("[");
+                msg.append(((mpv_event_log_message*)event->data)->prefix);
+                msg.append("]");
+                msg.append(((mpv_event_log_message*)event->data)->text);
+                switch(((mpv_event_log_message*)event->data)->log_level) {
+                    case MPV_LOG_LEVEL_FATAL:
+                        fatal() << msg;
+                        break;
+                    case MPV_LOG_LEVEL_ERROR:
+                        error() << msg;
+                        break;
+                    case MPV_LOG_LEVEL_WARN:
+                        warning() << msg;
+                        break;
+                    case MPV_LOG_LEVEL_INFO:
+                    case MPV_LOG_LEVEL_V:
+                        debug() << msg;
+                        break;
+                    default:
+                        break;
+                }
+            }
+            break;
             case MPV_EVENT_PROPERTY_CHANGE:
                 //debug() << "Changed Property " << event->reply_userdata;
                 switch(event->reply_userdata) {

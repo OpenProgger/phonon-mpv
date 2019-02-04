@@ -367,7 +367,6 @@ void MediaController::refreshSubtitles() {
                     title = subtitles.u.list->values[i].u.list->values[j].u.string;
                 if(QString(subtitles.u.list->values[i].u.list->keys[j]) == "forced" && subtitles.u.list->values[i].u.list->values[j].u.flag)
                     force = true;
-                warning() << "Data:" << subtitles.u.list->values[i].u.list->keys[j];
             }
             debug() << "found subtitle" << title << "[" << id << "]";
             GlobalSubtitles::instance()->add(this, id, (title.isEmpty() ? "Subtitle " + QString::number(id) : title) + (force ? "[FORCED]" : ""), "");
