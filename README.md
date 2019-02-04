@@ -13,11 +13,12 @@ This backend should be an lightweight alternative to libVLC with less dependenci
 - libmpv >= 0.29
 
 ## Build and Install
+Run this commands as root (or with sudo):
 
 ```
-  mkdir build
-  cd build
-  cmake <source directory>
-  make
-  make install
+  # mkdir build
+  # cd build
+  # cmake -DCMAKE_INSTALL_PREFIX=/usr <source directory>
+  # make
+  # make install
 ```
