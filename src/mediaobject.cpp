@@ -441,32 +441,41 @@ void MediaObject::updateMetaData() {
     if((err = mpv_get_property(m_player, "metadata", MPV_FORMAT_NODE, &metaData)))
         warning() << "Failed to get title count:" << mpv_error_string(err);
 
-    char* title;
-    if(!(title = mpv_get_property_string(m_player, "media-title")))
-        warning() << "Failed to get title name";
-    else {
-        metaDataMap.insert(QLatin1String("TITLE"), title);
-        mpv_free(title);
+    for(auto i{0}; i < metaData.u.list->num; i++) {
+        QString key(metaData.u.list->keys[i]);
+        if(key == "title")
+            metaDataMap.insert(QLatin1String("TITLE"), metaData.u.list->values[i].u.string);
+        else if(key == "artist")
+            metaDataMap.insert(QLatin1String("ARTIST"), metaData.u.list->values[i].u.string);
+        else if(key == "date")
+            metaDataMap.insert(QLatin1String("DATE"), metaData.u.list->values[i].u.string);
+        else if(key == "genre")
+            metaDataMap.insert(QLatin1String("GENRE"), metaData.u.list->values[i].u.string);
+        else if(key == "encoder")
+            metaDataMap.insert(QLatin1String("ENCODEDBY"), metaData.u.list->values[i].u.string);
+        else
+            metaDataMap.insert(QLatin1String(metaData.u.list->keys[i]), metaData.u.list->values[i].u.string);
     }
 
-    for(auto i{0}; i < metaData.u.list->num; i++)
-        metaDataMap.insert(QLatin1String(metaData.u.list->keys[i]), metaData.u.list->values[i].u.string);
-    //FIXME
-    /*metaDataMap.insert(QLatin1String("ALBUM"), "None");
-    metaDataMap.insert(QLatin1String("ARTIST"), "None");
-    metaDataMap.insert(QLatin1String("DATE"), "None");
-    metaDataMap.insert(QLatin1String("GENRE"), "None");
-    metaDataMap.insert(QLatin1String("TRACKNUMBER"), "None");
-    metaDataMap.insert(QLatin1String("DESCRIPTION"), "None");
-    metaDataMap.insert(QLatin1String("COPYRIGHT"), "None");
-    metaDataMap.insert(QLatin1String("URL"), "None");
-    metaDataMap.insert(QLatin1String("ENCODEDBY"), "None");*/
+    if(!metaDataMap.contains(QLatin1String("TITLE"))) {
+        char* title{nullptr};
+        if(!(title = mpv_get_property_string(m_player, "media-title")))
+            warning() << "Failed to get title name";
+        else {
+            metaDataMap.insert(QLatin1String("TITLE"), title);
+            mpv_free(title);
+        }
+    }
+    int64_t track{0};
+    if((err = mpv_get_property(m_player, "playlist-pos", MPV_FORMAT_INT64, &track)))
+        warning() << "Failed to get track number";
+    metaDataMap.insert(QLatin1String("TRACKNUMBER"), QString::number(track));
+    metaDataMap.insert(QLatin1String("URL"), m_mrl);
+    mpv_free_node_contents(&metaData);
 
     if(metaDataMap == m_mpvMetaData)
         return;
     m_mpvMetaData = metaDataMap;
-    mpv_free_node_contents(&metaData);
-
     emit metaDataChanged(metaDataMap);
 }
 
