@@ -188,7 +188,7 @@ Backend::Backend(QObject* parent, const QVariantList&)
         }
     }
     mpv_free_node_contents(&audioDevices);
-    m_effectManager = new EffectManager(this);
+    //m_effectManager = new EffectManager(this);
 }
 
 Backend::~Backend() {
@@ -209,10 +209,11 @@ QObject* Backend::createObject(BackendInterface::Class c, QObject* parent, const
             return new MediaObject(parent);
         case AudioOutputClass:
             return new AudioOutput(parent);
-        case AudioDataOutputClass:
+            //FIXME
+        /*case AudioDataOutputClass:
             return new AudioDataOutput(parent);
         case EffectClass:
-            return effectManager()->createEffect(args[0].toInt(), parent);
+            return effectManager()->createEffect(args[0].toInt(), parent);*/
         case VideoWidgetClass:
             return new VideoWidget(qobject_cast<QWidget*>(parent));
         case VolumeFaderEffectClass:
@@ -392,11 +393,11 @@ QList<int> Backend::objectDescriptionIndexes(ObjectDescriptionType type) const {
             return ids;
         }
         break;
-        case Phonon::EffectType: {
+        case Phonon::EffectType: /*{
             QList<EffectInfo> effectList{effectManager()->effects()};
             for (auto eff{0}; eff < effectList.size(); ++eff)
                 list.append(eff);
-            }
+            }*/
             break;
         case Phonon::SubtitleType:
             list << GlobalSubtitles::instance()->globalIndexes();
@@ -433,7 +434,7 @@ QHash<QByteArray, QVariant> Backend::objectDescriptionProperties(ObjectDescripti
         }
         break;
         case Phonon::EffectType: {
-            const QList<EffectInfo> effectList{effectManager()->effects()};
+            /*const QList<EffectInfo> effectList{effectManager()->effects()};
             if(index >= 0 && index <= effectList.size()) {
                 const EffectInfo& effect{effectList.at(index)};
                 ret.insert("name", effect.name());
@@ -441,7 +442,7 @@ QHash<QByteArray, QVariant> Backend::objectDescriptionProperties(ObjectDescripti
                 ret.insert("author", effect.author());
             } else {
                 Q_ASSERT(1); // Since we use list position as ID, this should not happen
-            }
+            }*/
         }
         break;
         case Phonon::SubtitleType: {
@@ -517,5 +518,6 @@ mpv_handle* Backend::handle() const {
 }
 
 EffectManager* Backend::effectManager() const {
-    return m_effectManager;
+    //return m_effectManager;
+    return NULL;
 }
