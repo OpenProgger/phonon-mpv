@@ -23,6 +23,7 @@
 #define Phonon_MPV_BACKEND_H
 
 #include <QStringList>
+#include <QMap>
 
 #include <phonon/objectdescription.h>
 #include <phonon/backendinterface.h>
@@ -88,6 +89,9 @@ namespace Phonon::MPV {
 
         /// \returns a list of all available mimetypes (hardcoded)
         QStringList availableMimeTypes() const;
+ 
+        /// \returns a list of all available mimetypes with video information
+        const QMap<QString, bool>& mimeTypes() const;
 
         /**
         * Returns a list of indexes for the desired object types. It specifies a list of objects
@@ -143,7 +147,7 @@ namespace Phonon::MPV {
         void objectDescriptionChanged(ObjectDescriptionType);
 
     private:
-        QStringList m_supportedMimeTypes;
+        QMap<QString, bool> m_supportedMimeTypes;
         mpv_handle* m_mpvInstance;
         
         QVector<QPair<QString, DeviceAccess>> m_devices;
