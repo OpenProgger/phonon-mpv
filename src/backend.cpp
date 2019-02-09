@@ -362,8 +362,9 @@ QObject* Backend::createObject(BackendInterface::Class c, QObject* parent, const
             return effectManager()->createEffect(args[0].toInt(), parent);*/
         case VideoWidgetClass:
             return new VideoWidget(qobject_cast<QWidget*>(parent));
-        case VolumeFaderEffectClass:
-            return new VolumeFaderEffect(parent);
+			//FIXME
+        /*case VolumeFaderEffectClass:
+            return new VolumeFaderEffect(parent);*/
         default:
             break;
     }
@@ -479,11 +480,11 @@ bool Backend::connectNodes(QObject* source, QObject* sink) {
             return true;
         }
 
-        VolumeFaderEffect* effect{qobject_cast<VolumeFaderEffect*>(source)};
+        /*VolumeFaderEffect* effect{qobject_cast<VolumeFaderEffect*>(source)};
         if(effect) {
             sinkNode->connectToMediaObject(effect->mediaObject());
             return true;
-        }
+        }*/
     }
 
     warning() << "Linking" << source->metaObject()->className() << "to" << sink->metaObject()->className() << "failed";
@@ -500,11 +501,11 @@ bool Backend::disconnectNodes(QObject* source, QObject* sink) {
             return true;
         }
 
-        VolumeFaderEffect* const effect{qobject_cast<VolumeFaderEffect*>(source)};
+        /*VolumeFaderEffect* const effect{qobject_cast<VolumeFaderEffect*>(source)};
         if(effect) {
             sinkNode->disconnectFromMediaObject(effect->mediaObject());
             return true;
-        }
+        }*/
     }
 
     return false;
