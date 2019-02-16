@@ -66,24 +66,24 @@ namespace Phonon::MPV {
         * \param mediaObject What media object to connect to
         * \reimp
         */
-        void handleConnectToMediaObject(MediaObject *mediaObject);
+        void handleConnectToMediaObject(MediaObject *mediaObject) Q_DECL_OVERRIDE;
         /** \reimp */
-        void handleDisconnectFromMediaObject(MediaObject *mediaObject);
+        void handleDisconnectFromMediaObject(MediaObject *mediaObject) Q_DECL_OVERRIDE;
 
         /**
         * \return The aspect ratio previously set for the video widget
         */
-        Phonon::VideoWidget::AspectRatio aspectRatio() const;
+        Phonon::VideoWidget::AspectRatio aspectRatio() const Q_DECL_OVERRIDE;
 
         /**
         * Set the aspect ratio of the video.
         */
-        void setAspectRatio(Phonon::VideoWidget::AspectRatio aspect);
+        void setAspectRatio(Phonon::VideoWidget::AspectRatio aspect) Q_DECL_OVERRIDE;
 
         /**
         * \return The scale mode previously set for the video widget
         */
-        Phonon::VideoWidget::ScaleMode scaleMode() const;
+        Phonon::VideoWidget::ScaleMode scaleMode() const Q_DECL_OVERRIDE;
 
         /**
         * Set how the video is scaled, keeping the aspect ratio into account when the video is resized.
@@ -92,55 +92,55 @@ namespace Phonon::MPV {
         * \li Phonon::VideoWidget::FitInView - the video will be fitted to fill the view keeping aspect ratio
         * \li Phonon::VideoWidget::ScaleAndCrop - the video is scaled
         */
-        void setScaleMode(Phonon::VideoWidget::ScaleMode scale);
+        void setScaleMode(Phonon::VideoWidget::ScaleMode scale) Q_DECL_OVERRIDE;
 
         /**
         * \return The brightness previously set for the video widget
         */
-        qreal brightness() const;
+        qreal brightness() const Q_DECL_OVERRIDE;
 
         /**
         * Set the brightness of the video
         */
-        Q_INVOKABLE void setBrightness(qreal brightness);
+        Q_INVOKABLE void setBrightness(qreal brightness) Q_DECL_OVERRIDE;
 
         /**
         * \return The contrast previously set for the video widget
         */
-        qreal contrast() const;
+        qreal contrast() const Q_DECL_OVERRIDE;
 
         /**
         * Set the contrast of the video
         */
-        Q_INVOKABLE void setContrast(qreal contrast);
+        Q_INVOKABLE void setContrast(qreal contrast) Q_DECL_OVERRIDE;
 
         /**
         * \return The hue previously set for the video widget
         */
-        qreal hue() const;
+        qreal hue() const Q_DECL_OVERRIDE;
 
         /**
         * Set the hue of the video
         */
-        Q_INVOKABLE void setHue(qreal hue);
+        Q_INVOKABLE void setHue(qreal hue) Q_DECL_OVERRIDE;
 
         /**
         * \return The saturation previously set for the video widget
         */
-        qreal saturation() const;
+        qreal saturation() const Q_DECL_OVERRIDE;
 
         /**
         * Set the saturation of the video
         */
-        Q_INVOKABLE void setSaturation(qreal saturation);
+        Q_INVOKABLE void setSaturation(qreal saturation) Q_DECL_OVERRIDE;
 
         /**
         * \return The owned widget that is used for the actual draw.
         */
-        QWidget *widget();
+        QWidget *widget() Q_DECL_OVERRIDE;
 
         /// \reimp
-        QSize sizeHint() const;
+        QSize sizeHint() const Q_DECL_OVERRIDE;
 
     private slots:
         /// Updates the sizeHint to match the native size of the video.
@@ -183,7 +183,7 @@ namespace Phonon::MPV {
         /**
         * \return The snapshot of the current video frame.
         */
-        QImage snapshot() const;
+        QImage snapshot() const Q_DECL_OVERRIDE;
 
         /**
         * Pending video adjusts the application tried to set before we actually

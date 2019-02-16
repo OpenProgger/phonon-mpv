@@ -38,6 +38,8 @@
 #define MPV_ENABLE_DEPRECATED 0
 #include <mpv/client.h>
 
+#include <clocale>
+
 #include "audio/audiooutput.h"
 #include "audio/audiodataoutput.h"
 #include "audio/volumefadereffect.h"
