@@ -23,7 +23,6 @@
 #include "mediaobject.h"
 
 #include <QDir>
-#include <QMimeDatabase>
 #include <QStringBuilder>
 #include <QUrl>
 
@@ -191,11 +190,9 @@ void MediaObject::loadMedia(const QString &mrl) {
     debug() << "loading encoded:" << m_mrl;
     if(mrl.length())
         m_mrl = mrl.toUtf8();
-    if(!hasVideo() || !videoWait) {
-        auto err{0};
-        if((err = mpv_set_property_string(m_player, "vo", hasVideo() ? "libmpv" : "null")))
-            error() << "Failed to set video:" << mpv_error_string(err);
+    if(!videoWait) {
         resetMembers();
+        auto err{0};
         if(m_state == PlayingState)
             updateState(StoppedState);
         const char* cmd[]{"loadfile", m_mrl.constData(), nullptr};
@@ -414,10 +411,17 @@ QString MediaObject::errorString() const {
 
 bool MediaObject::hasVideo() const {
     DEBUG_BLOCK
-    if(m_mrl.isEmpty())
-        return false;
-    else
-        return Backend::self->mimeTypes()[QMimeDatabase().mimeTypeForFile(m_mrl).name()];
+    //FIXME
+    //static int force = 0;
+    // Cached: sometimes 4.0.0-dev sends the vout event but then
+    // has_vout is still false. Guard against this by simply always reporting
+    // the last hasVideoChanged value. If that is off we can still drop into
+    // libvlc in case it changed meanwhile.
+    //if(force < 10) {
+    //force++;
+    return true;
+    //}
+    //return m_hasVideo || m_player->hasVideoOutput();
 }
 
 bool MediaObject::isSeekable() const {
