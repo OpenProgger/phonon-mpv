@@ -118,6 +118,9 @@ Backend::Backend(QObject* parent, const QVariantList&)
         fatal() << "Phonon::MPV::mpvInit: Failed to initialize mpv";
     }
 
+    // until we have a video surface, disable video rendering
+    if((err = mpv_set_property_string(m_mpvInstance, "vo", "null")))
+        warning() << "failed to disable video rendering: " << mpv_error_string(err);
     PulseSupport* pulse{PulseSupport::getInstance()};
     pulse->enable(true);
     connect(pulse, SIGNAL(objectDescriptionChanged(ObjectDescriptionType)),

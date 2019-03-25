@@ -80,7 +80,9 @@ void VideoWidget::initializeGL() {
     if((err = mpv_render_context_create(&mpv_gl, m_player, params)))
         fatal() << "failed to initialize mpv GL context:" << mpv_error_string(err);
     mpv_render_context_set_update_callback(mpv_gl, onUpdate, reinterpret_cast<void *>(this));
-    m_mediaObject->videoWait = 0;
+    if((err = mpv_set_property_string(m_player, "vo", "libmpv")))
+        warning() << "failed to enable video rendering: " << mpv_error_string(err);
+    m_mediaObject->stop();
     m_mediaObject->loadMedia(QByteArray());
 }
 
@@ -149,7 +151,6 @@ void VideoWidget::handleConnectToMediaObject(MediaObject* mediaObject) {
             SLOT(processPendingAdjusts(bool)));
     connect(mediaObject, SIGNAL(currentSourceChanged(MediaSource)),
             SLOT(clearPendingAdjusts()));
-    mediaObject->videoWait = 1;
     clearPendingAdjusts();
 }
 

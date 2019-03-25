@@ -179,7 +179,6 @@ namespace Phonon::MPV {
         void setTransitionTime(qint32);
 
         void emitAboutToFinish();
-        QAtomicInt videoWait;
         void loadMedia(const QString& mrl);
         static void event_cb(void *opaque);
 
