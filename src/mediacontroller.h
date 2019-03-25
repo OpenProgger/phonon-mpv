@@ -51,9 +51,9 @@ public:
     MediaController();
     virtual ~MediaController();
 
-    bool hasInterface(Interface iface) const;
+    bool hasInterface(Interface iface) const Q_DECL_OVERRIDE;
 
-    QVariant interfaceCall(Interface iface, int i_command, const QList<QVariant> & arguments = QList<QVariant>());
+    QVariant interfaceCall(Interface iface, int i_command, const QList<QVariant> & arguments = QList<QVariant>()) Q_DECL_OVERRIDE;
 
     /**
      * Overloaded by MediaObject through MediaObjectInterface.

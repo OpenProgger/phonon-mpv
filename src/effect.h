@@ -52,14 +52,14 @@ namespace Phonon::MPV {
         ~Effect();
 
         void setupEffectParams();
-        QList<EffectParameter> parameters() const;
-        QVariant parameterValue(const EffectParameter& param) const;
-        void setParameterValue(const EffectParameter& param, const QVariant& newValue);
+        QList<EffectParameter> parameters() const Q_DECL_OVERRIDE;
+        QVariant parameterValue(const EffectParameter& param) const Q_DECL_OVERRIDE;
+        void setParameterValue(const EffectParameter& param, const QVariant& newValue) Q_DECL_OVERRIDE;
 
         /** \reimp */
-        void handleConnectToMediaObject(MediaObject* p_media_object);
+        void handleConnectToMediaObject(MediaObject* p_media_object) Q_DECL_OVERRIDE;
         /** \reimp */
-        void handleDisconnectFromMediaObject(MediaObject* p_media_object);
+        void handleDisconnectFromMediaObject(MediaObject* p_media_object) Q_DECL_OVERRIDE;
 
     private:
 

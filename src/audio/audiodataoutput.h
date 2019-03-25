@@ -64,11 +64,11 @@ namespace Phonon::MPV {
         explicit AudioDataOutput(QObject *parent);
         ~AudioDataOutput();
 
-        Phonon::AudioDataOutput* frontendObject() const {
+        Phonon::AudioDataOutput* frontendObject() const Q_DECL_OVERRIDE {
             return m_frontend;
         }
 
-        void setFrontendObject(Phonon::AudioDataOutput* frontend) {
+        void setFrontendObject(Phonon::AudioDataOutput* frontend) Q_DECL_OVERRIDE {
             m_frontend = frontend;
         }
 

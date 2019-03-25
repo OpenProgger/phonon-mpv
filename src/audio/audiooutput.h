@@ -55,23 +55,23 @@ namespace Phonon::MPV {
         ~AudioOutput();
 
         /** \reimp */
-        void handleConnectToMediaObject(MediaObject* mediaObject);
+        void handleConnectToMediaObject(MediaObject* mediaObject) Q_DECL_OVERRIDE;
 
         /**
         * \return The current volume for this audio output.
         */
-        qreal volume() const;
+        qreal volume() const Q_DECL_OVERRIDE;
 
         /**
         * Sets the volume of the audio output. See the Phonon::AudioOutputInterface::setVolume() documentation
         * for details.
         */
-        void setVolume(qreal volume);
+        void setVolume(qreal volume) Q_DECL_OVERRIDE;
 
         /**
         * \return The index of the current audio output device from the list obtained from the backend object.
         */
-        int outputDevice() const;
+        int outputDevice() const Q_DECL_OVERRIDE;
 
         /**
         * Sets the current output device for this audio output. The validity of the device index
@@ -81,7 +81,7 @@ namespace Phonon::MPV {
         * \return \c true if succeeded, or no change was made
         * \return \c false if failed
         */
-        bool setOutputDevice(int);
+        bool setOutputDevice(int) Q_DECL_OVERRIDE;
 
         /**
         * Sets the current output device for this audio output.
@@ -91,23 +91,23 @@ namespace Phonon::MPV {
         * \return \c false if failed
         */
 #if (PHONON_VERSION >= PHONON_VERSION_CHECK(4, 2, 0))
-        bool setOutputDevice(const AudioOutputDevice& newDevice);
+        bool setOutputDevice(const AudioOutputDevice& newDevice) Q_DECL_OVERRIDE;
 #endif
 
 #if (PHONON_VERSION >= PHONON_VERSION_CHECK(4, 6, 50))
-        void setStreamUuid(QString uuid);
+        void setStreamUuid(QString uuid) Q_DECL_OVERRIDE;
 #endif
 
 #if (PHONON_VERSION >= PHONON_VERSION_CHECK(4, 8, 50))
-        void setMuted(bool mute);
+        void setMuted(bool mute) Q_DECL_OVERRIDE;
 #endif
 
-        virtual void setCategory(Phonon::Category category);
+        virtual void setCategory(Phonon::Category category) Q_DECL_OVERRIDE;
 
     signals:
         void volumeChanged(qreal volume);
         void audioDeviceFailed();
-        void mutedChanged(bool mute);
+        void mutedChanged(bool mute) Q_DECL_OVERRIDE;
 
     private slots:
         /**
