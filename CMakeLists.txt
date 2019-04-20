@@ -11,8 +11,8 @@ macro_log_feature(PHONON_FOUND "Phonon" "Core Library" "git://anongit.kde.org/ph
 
 #LibMPV
 find_package(PkgConfig)
-pkg_check_modules(MPV REQUIRED mpv>=0.29.0)
-macro_log_feature(MPV_FOUND "LibMPV" "MPV C API Library" "http://github.com/mpv-player/mpv" TRUE "0.29.0")
+pkg_check_modules(MPV REQUIRED mpv>=1.101.0)
+macro_log_feature(MPV_FOUND "LibMPV" "MPV C API Library" "http://github.com/mpv-player/mpv" TRUE "1.101.0")
 
 find_package(Qt5X11Extras)
 find_package(Qt5Gui)
