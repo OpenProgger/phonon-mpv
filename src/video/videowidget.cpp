@@ -88,7 +88,7 @@ void VideoWidget::initializeGL() {
 
 void VideoWidget::paintGL() {
     mpv_opengl_fbo mpfbo{static_cast<int>(defaultFramebufferObject()), width(), height(), 0};
-    int flip_y{1};
+    auto flip_y{1};
     mpv_render_param params[] = {
         {MPV_RENDER_PARAM_OPENGL_FBO, &mpfbo},
         {MPV_RENDER_PARAM_FLIP_Y, &flip_y},
