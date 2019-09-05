@@ -7,8 +7,8 @@ libmpv supports less features than VLC but they are only related to memory strea
 This backend should be an lightweight alternative to libVLC with less dependencies,
 
 ## Requirements
-- cmake
-- Phonon >= 4.9
+- cmake >= 3.5
+- Phonon >= 4.11
 - Qt5
 - libmpv >= 0.29
 
