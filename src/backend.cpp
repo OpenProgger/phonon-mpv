@@ -151,16 +151,10 @@ Backend::Backend(QObject* parent, const QVariantList&)
         }
     }
 
-#if (PHONON_VERSION < PHONON_VERSION_CHECK(4, 8, 51))
-    if(pulse && pulse->isActive()) {
-#else
     if(pulse && pulse->isUsable()) {
-#endif
         if(audioOutBackends.contains("pulse")) {
             m_devices.append(QPair<QString, DeviceAccess>("Default", DeviceAccess("pulse", "default")));
-#if (PHONON_VERSION >= PHONON_VERSION_CHECK(4, 8, 51))
             pulse->request(true);
-#endif
             return;
         } else {
             pulse->enable(false);

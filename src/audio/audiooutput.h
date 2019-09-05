@@ -90,17 +90,11 @@ namespace Phonon::MPV {
         * \return \c true if succeeded, or no change was made
         * \return \c false if failed
         */
-#if (PHONON_VERSION >= PHONON_VERSION_CHECK(4, 2, 0))
         bool setOutputDevice(const AudioOutputDevice& newDevice) Q_DECL_OVERRIDE;
-#endif
 
-#if (PHONON_VERSION >= PHONON_VERSION_CHECK(4, 6, 50))
         void setStreamUuid(QString uuid) Q_DECL_OVERRIDE;
-#endif
 
-#if (PHONON_VERSION >= PHONON_VERSION_CHECK(4, 8, 50))
         void setMuted(bool mute) Q_DECL_OVERRIDE;
-#endif
 
         virtual void setCategory(Phonon::Category category) Q_DECL_OVERRIDE;
 

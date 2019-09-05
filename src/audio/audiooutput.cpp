@@ -78,7 +78,6 @@ void AudioOutput::setVolume(qreal volume) {
     }
 }
 
-#if (PHONON_VERSION >= PHONON_VERSION_CHECK(4, 8, 50))
 void AudioOutput::setMuted(bool mute) {
     auto err{0};
     auto muted{0};
@@ -93,7 +92,6 @@ void AudioOutput::setMuted(bool mute) {
     if((err = mpv_set_property(m_player, "mute", MPV_FORMAT_FLAG, &muted)))
         warning() << "Failed to set volume:" << mpv_error_string(err);
 }
-#endif
 
 void AudioOutput::setCategory(Category category) {
     m_category = category;
@@ -112,7 +110,6 @@ bool AudioOutput::setOutputDevice(int deviceIndex) {
     return setOutputDevice(device);
 }
 
-#if (PHONON_VERSION >= PHONON_VERSION_CHECK(4, 2, 0))
 bool AudioOutput::setOutputDevice(const AudioOutputDevice &newDevice) {
     debug() << Q_FUNC_INFO;
 
@@ -128,15 +125,12 @@ bool AudioOutput::setOutputDevice(const AudioOutputDevice &newDevice) {
 
     return true;
 }
-#endif
 
-#if (PHONON_VERSION >= PHONON_VERSION_CHECK(4, 6, 50))
 void AudioOutput::setStreamUuid(QString uuid) {
     DEBUG_BLOCK;
     debug() << uuid;
     m_streamUuid = uuid;
 }
-#endif
 
 void AudioOutput::setOutputDeviceImplementation() {
     Q_ASSERT(m_player);
@@ -176,11 +170,6 @@ void AudioOutput::setOutputDeviceImplementation() {
 void AudioOutput::onMutedChanged(bool mute) {
     m_muted = mute;
     emit mutedChanged(mute);
-#if (PHONON_VERSION < PHONON_VERSION_CHECK(4, 8, 51))
-    // Previously we had no interface signal to communicate mutness, so instead
-    // emit volume.
-    mute ? emit volumeChanged(0.0) : emit volumeChanged(volume());
-#endif
 }
 
 void AudioOutput::onVolumeChanged(float volume) {
