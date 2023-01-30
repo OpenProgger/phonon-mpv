@@ -54,7 +54,7 @@ static void* get_proc_address(void* ctx, const char* name) {
 }
 
 void VideoWidget::initializeGL() {
-    mpv_opengl_init_params gl_init_params{get_proc_address, nullptr, nullptr};
+    mpv_opengl_init_params gl_init_params{get_proc_address, QOpenGLContext::currentContext()};
     mpv_render_param display{MPV_RENDER_PARAM_INVALID, nullptr};
 #ifdef X11_SUPPORT
     if(QX11Info::isPlatformX11()) {
