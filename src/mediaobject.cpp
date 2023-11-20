@@ -25,6 +25,7 @@
 #include <QDir>
 #include <QStringBuilder>
 #include <QUrl>
+#include <QList>
 
 #define MPV_ENABLE_DEPRECATED 0
 #include <mpv/client.h>
@@ -38,6 +39,8 @@
 static const int ABOUT_TO_FINISH_TIME = 2000;
 
 using namespace Phonon::MPV;
+
+static QList<void*> recentlyDestroyed;
 
 MediaObject::MediaObject(QObject* parent)
     : QObject(parent)
@@ -72,9 +75,14 @@ MediaObject::MediaObject(QObject* parent)
 }
 
 MediaObject::~MediaObject() {
+    recentlyDestroyed.append(this);
 }
 
 void MediaObject::event_cb(void *opaque) {
+    if(recentlyDestroyed.contains(opaque)) {
+        recentlyDestroyed.removeAll(opaque);
+        return;
+    }
     MediaObject* that = reinterpret_cast<MediaObject*>(opaque);
     QMetaObject::invokeMethod(
                     that,
