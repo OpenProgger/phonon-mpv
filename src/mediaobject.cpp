@@ -26,6 +26,11 @@
 #include <QStringBuilder>
 #include <QUrl>
 
+#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
+#include <QLatin1StringView>
+#define QLatin1Literal QLatin1StringView
+#endif
+
 #define MPV_ENABLE_DEPRECATED 0
 #include <mpv/client.h>
 

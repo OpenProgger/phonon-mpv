@@ -25,10 +25,10 @@
 #undef QT_NO_DEBUG_OUTPUT
 #undef KDE_NO_DEBUG_OUTPUT
 
-#include <QtCore/QDebug>
-#include <QtCore/QMutex>
+#include <QDebug>
+#include <QRecursiveMutex>
 
-# include <QtCore/QElapsedTimer>
+#include <QElapsedTimer>
 
 /**
  * @namespace Debug
@@ -61,7 +61,7 @@
  */
 namespace Debug
 {
-    extern QMutex mutex;
+    extern QRecursiveMutex mutex;
 
     enum DebugLevel {
         DEBUG_INFO  = 0,

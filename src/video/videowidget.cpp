@@ -25,12 +25,19 @@
 #include <QtGui/QPaintEvent>
 #include <QDir>
 #include <QOpenGLContext>
-#ifdef X11_SUPPORT
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0) && defined(X11_SUPPORT)
 #include <QtX11Extras/QX11Info>
 #endif
 #ifdef WAYLAND_SUPPORT
 #include <QGuiApplication>
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0) && defined(X11_SUPPORT)
 #include <qpa/qplatformnativeinterface.h>
+#endif
+#endif
+
+#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
+#include <QLatin1StringView>
+#define QLatin1Literal QLatin1StringView
 #endif
 
 #define MPV_ENABLE_DEPRECATED 0
@@ -57,16 +64,30 @@ void VideoWidget::initializeGL() {
     mpv_opengl_init_params gl_init_params{get_proc_address, QOpenGLContext::currentContext()};
     mpv_render_param display{MPV_RENDER_PARAM_INVALID, nullptr};
 #ifdef X11_SUPPORT
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
     if(QX11Info::isPlatformX11()) {
         display.type = MPV_RENDER_PARAM_X11_DISPLAY;
         display.data = QX11Info::display();
     }
+#else
+    if(QNativeInterface::QX11Application const *n = qApp->nativeInterface<QNativeInterface::QX11Application>()) {
+        display.type = MPV_RENDER_PARAM_X11_DISPLAY;
+        display.data = n->display();
+    }
+#endif
 #endif
 #ifdef WAYLAND_SUPPORT
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
     if(!display.data) {
         display.type = MPV_RENDER_PARAM_WL_DISPLAY;
         display.data = (struct wl_display*)QGuiApplication::platformNativeInterface()->nativeResourceForWindow("display", NULL);
     }
+#else
+    if(QNativeInterface::QWaylandApplication const *n = qApp->nativeInterface<QNativeInterface::QWaylandApplication>()) {
+        display.type = MPV_RENDER_PARAM_X11_DISPLAY;
+        display.data = n->display();
+    }
+#endif
 #endif
     mpv_render_param params[]{
         {MPV_RENDER_PARAM_API_TYPE, const_cast<char *>(MPV_RENDER_API_TYPE_OPENGL)},

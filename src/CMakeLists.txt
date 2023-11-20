@@ -22,23 +22,21 @@ set(phonon_mpv_SRCS
 add_library(phonon_mpv MODULE ${phonon_mpv_SRCS})
 
 target_link_libraries(phonon_mpv
-    Phonon::phonon4qt5
+    Phonon::phonon4qt${QT_MAJOR_VERSION}
     ${MPV_LIBRARIES}
 )
 
-if(Qt5Gui_FOUND)
-    add_definitions(-DWAYLAND_SUPPORT)
+add_definitions(-DWAYLAND_SUPPORT)
+add_definitions(-DX11_SUPPORT)
+if(QT_MAJOR_VERSION STREQUAL "5")
     include_directories(${Qt5Gui_PRIVATE_INCLUDE_DIRS})
-    target_link_libraries(phonon_mpv Qt5::Gui)
-endif()
-
-if(Qt5X11Extras_FOUND)
-    add_definitions(-DX11_SUPPORT)
-    target_link_libraries(phonon_mpv Qt5::X11Extras)
+    target_link_libraries(phonon_mpv Qt::Gui Qt::X11Extras)
+else()
+    target_link_libraries(phonon_mpv Qt::Core Qt::Gui Qt::OpenGLWidgets)
 endif()
 
 if(PHONON_EXPERIMENTAL)
-    target_link_libraries(phonon_mpv Phonon::phonon4qt5experimental)
+    target_link_libraries(phonon_mpv Phonon::phonon4qt${QT_MAJOR_VERSION}experimental)
 endif()
 
 install(TARGETS phonon_mpv DESTINATION ${PHONON_BACKEND_DIR})

@@ -22,6 +22,7 @@
 #include "debug.h"
 
 #include <QtCore/QString>
+#include <QIODevice>
 
 class IndentPrivate
     : public QObject

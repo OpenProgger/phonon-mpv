@@ -26,7 +26,6 @@
 #include <QDir>
 #include <QResizeEvent>
 #include <QIcon>
-#include <QLatin1Literal>
 #include <QMessageBox>
 #include <QtPlugin>
 #include <QSettings>
