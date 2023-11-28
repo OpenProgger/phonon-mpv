@@ -72,6 +72,7 @@ MediaObject::MediaObject(QObject* parent)
 }
 
 MediaObject::~MediaObject() {
+    mpv_destroy(m_player);
 }
 
 void MediaObject::event_cb(void *opaque) {
