@@ -286,16 +286,16 @@ void MediaObject::setSource(const MediaSource &source) {
                     error() << Q_FUNC_INFO << "the MediaSource::Disc doesn't specify which one (Phonon::NoDisc)";
                     return;
                 case Phonon::Cd:
-                    loadMedia(QLatin1Literal("cdda://") % m_mediaSource.deviceName());
+                    loadMedia(QStringLiteral("cdda://") % m_mediaSource.deviceName());
                     break;
                 case Phonon::Dvd:
-                    loadMedia(QLatin1Literal("dvd://") % m_mediaSource.deviceName());
+                    loadMedia(QStringLiteral("dvd://") % m_mediaSource.deviceName());
                     break;
                 case Phonon::Vcd:
-                    loadMedia(QLatin1Literal("vcd://") % m_mediaSource.deviceName());
+                    loadMedia(QStringLiteral("vcd://") % m_mediaSource.deviceName());
                     break;
                 case Phonon::BluRay:
-                    loadMedia(QLatin1Literal("bluray://") % m_mediaSource.deviceName());
+                    loadMedia(QStringLiteral("bluray://") % m_mediaSource.deviceName());
                     break;
             }
             break;
@@ -313,11 +313,11 @@ void MediaObject::setSource(const MediaSource &source) {
             deviceName = source.deviceAccessList().first().second;
 
             if (driverName == QByteArray("v4l2"))
-                loadMedia(QLatin1Literal("v4l2://") % deviceName);
+                loadMedia(QStringLiteral("v4l2://") % deviceName);
             else if (driverName == QByteArray("alsa"))
-                loadMedia(QLatin1Literal("alsa://") % deviceName);
+                loadMedia(QStringLiteral("alsa://") % deviceName);
             else if (driverName == "screen")
-                loadMedia(QLatin1Literal("screen://") % deviceName);
+                loadMedia(QStringLiteral("screen://") % deviceName);
             else
                 error() << Q_FUNC_INFO << "Unsupported MediaSource::CaptureDevice:" << driverName;
         }

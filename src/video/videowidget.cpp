@@ -25,11 +25,11 @@
 #include <QtGui/QPaintEvent>
 #include <QDir>
 #include <QOpenGLContext>
+#include <QGuiApplication>
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
 #ifdef X11_SUPPORT
 #include <QtX11Extras/QX11Info>
 #endif
-#ifdef WAYLAND_SUPPORT
-#include <QGuiApplication>
 #include <qpa/qplatformnativeinterface.h>
 #endif
 
@@ -56,16 +56,27 @@ static void* get_proc_address(void* ctx, const char* name) {
 void VideoWidget::initializeGL() {
     mpv_opengl_init_params gl_init_params{get_proc_address, QOpenGLContext::currentContext()};
     mpv_render_param display{MPV_RENDER_PARAM_INVALID, nullptr};
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
 #ifdef X11_SUPPORT
     if(QX11Info::isPlatformX11()) {
         display.type = MPV_RENDER_PARAM_X11_DISPLAY;
         display.data = QX11Info::display();
     }
 #endif
-#ifdef WAYLAND_SUPPORT
     if(!display.data) {
         display.type = MPV_RENDER_PARAM_WL_DISPLAY;
         display.data = (struct wl_display*)QGuiApplication::platformNativeInterface()->nativeResourceForWindow("display", NULL);
+    }
+#else
+#ifdef X11_SUPPORT
+    if(auto *app = qApp->nativeInterface<QNativeInterface::QX11Application>()) {
+        display.type = MPV_RENDER_PARAM_X11_DISPLAY;
+        display.data = app->display();
+    }
+#endif
+    if(auto *app = qApp->nativeInterface<QNativeInterface::QWaylandApplication>()) {
+        display.type = MPV_RENDER_PARAM_WL_DISPLAY;
+        display.data = app->display();
     }
 #endif
     mpv_render_param params[]{
@@ -348,14 +359,14 @@ bool VideoWidget::enableFilterAdjust(bool adjust) {
 QImage VideoWidget::snapshot() const {
     DEBUG_BLOCK;
     if (m_player) {
-        const auto path{(QDir::tempPath() + "/" + QLatin1Literal("phonon-mpv-snapshot")).toUtf8()};
+        const auto path{(QDir::tempPath() + "/" + QStringLiteral("phonon-mpv-snapshot")).toUtf8()};
         const char* cmd[]{"screenshot-to-file", path.constData(), nullptr};
         auto err{0};
         if((err = mpv_command(m_player, cmd))) {
             warning() << "Failed to take screenshot:" << mpv_error_string(err);
             return QImage();
         }
-        return QImage(QDir::tempPath() + "/" + QLatin1Literal("phonon-mpv-snapshot"));
+        return QImage(QDir::tempPath() + "/" + QStringLiteral("phonon-mpv-snapshot"));
     } else {
         return QImage();
     }

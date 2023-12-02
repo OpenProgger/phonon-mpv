@@ -182,7 +182,7 @@ namespace Phonon::MPV {
         void loadMedia(const QString& mrl);
         static void event_cb(void *opaque);
 
-    signals:
+    Q_SIGNALS:
         // MediaController signals
         void availableSubtitlesChanged() Q_DECL_OVERRIDE;
         void availableAudioChannelsChanged() Q_DECL_OVERRIDE;
@@ -212,7 +212,7 @@ namespace Phonon::MPV {
 
         void moveToNext();
 
-    private slots:
+    private Q_SLOTS:
         /**
         * If the new state is different from the current state, the current state is
         * changed and the corresponding signal is emitted.

@@ -80,7 +80,7 @@ namespace Phonon::MPV {
         * \warning Currently it doesn't add any effects, everything is disabled.
         * \see EffectInfo
         */
-        explicit EffectManager(QObject* parent = 0);
+        explicit EffectManager(QObject* parent = nullptr);
 
         /// Deletes all the effects from the lists and destroys the effect manager.
         ~EffectManager();

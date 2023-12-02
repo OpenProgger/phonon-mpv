@@ -276,7 +276,7 @@ void MediaController::refreshAudioChannels() {
             if(i == currentChannelId) {
                 const QList<AudioChannelDescription> list{GlobalAudioChannels::instance()->listFor(this)};
                 foreach(const AudioChannelDescription &descriptor, list) {
-                    if(descriptor.name() == id)
+                    if(descriptor.name() == QChar(id))
                         m_currentAudioChannel = descriptor;
                 }
             }

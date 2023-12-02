@@ -67,7 +67,7 @@ namespace Phonon::MPV {
         *
         * \param parent A parent object for the backend (passed to the QObject constructor)
         */
-        explicit Backend(QObject* parent = 0, const QVariantList& = QVariantList());
+        explicit Backend(QObject* parent = nullptr, const QVariantList& = QVariantList());
         virtual ~Backend();
 
         /// \return The mpv handle that is associated with this backend object

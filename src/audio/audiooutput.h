@@ -98,12 +98,12 @@ namespace Phonon::MPV {
 
         virtual void setCategory(Phonon::Category category) Q_DECL_OVERRIDE;
 
-    signals:
+    Q_SIGNALS:
         void volumeChanged(qreal volume);
         void audioDeviceFailed();
         void mutedChanged(bool mute) Q_DECL_OVERRIDE;
 
-    private slots:
+    private Q_SLOTS:
         /**
         * Sets the volume to m_volume.
         */

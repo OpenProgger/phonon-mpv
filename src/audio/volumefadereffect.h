@@ -35,7 +35,7 @@ namespace Phonon::MPV {
         Q_INTERFACES(Phonon::VolumeFaderInterface)
 
     public:
-        explicit VolumeFaderEffect(QObject* parent = 0);
+        explicit VolumeFaderEffect(QObject* parent = nullptr);
         ~VolumeFaderEffect();
 
         // VolumeFaderInterface:
@@ -46,7 +46,7 @@ namespace Phonon::MPV {
         void setVolume(float v) Q_DECL_OVERRIDE;
         QPointer<MediaObject> mediaObject() { return m_mediaObject; }
 
-    private slots:
+    private Q_SLOTS:
         void slotSetVolume(qreal v);
 
     private:
