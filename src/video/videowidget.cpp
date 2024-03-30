@@ -93,6 +93,8 @@ void VideoWidget::initializeGL() {
     mpv_render_context_set_update_callback(mpv_gl, onUpdate, reinterpret_cast<void *>(this));
     if((err = mpv_set_property_string(m_player, "vo", "libmpv")))
         warning() << "failed to enable video rendering: " << mpv_error_string(err);
+    if ((err = mpv_set_property_string(m_player, "hwdec", "auto")))
+        warning() << "failed to enable hardware video decoding: " << mpv_error_string(err);
     m_mediaObject->stop();
     m_mediaObject->loadMedia(QByteArray());
 }
