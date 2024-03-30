@@ -98,7 +98,10 @@ void VideoWidget::initializeGL() {
 }
 
 void VideoWidget::paintGL() {
-    mpv_opengl_fbo mpfbo{static_cast<int>(defaultFramebufferObject()), width(), height(), 0};
+    qreal raito = window()->devicePixelRatio();
+    int widthPx = width() * raito;
+    int heightPx = height() * raito;
+    mpv_opengl_fbo mpfbo{static_cast<int>(defaultFramebufferObject()), widthPx, heightPx, 0};
     auto flip_y{1};
     mpv_render_param params[] = {
         {MPV_RENDER_PARAM_OPENGL_FBO, &mpfbo},
