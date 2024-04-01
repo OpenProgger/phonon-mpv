@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.5 FATAL_ERROR)
-project(PhononMPV VERSION 0.0.7)
+project(PhononMPV VERSION 0.1.0)
 
 set(CMAKE_CXX_STANDARD 17)
 
